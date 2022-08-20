@@ -1,22 +1,31 @@
 package me.megamagnum.main;
 
 import me.megamagnum.main.files.Storage;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import me.megamagnum.main.files.commandAFK;
+import me.megamagnum.main.files.commandPerformance;
+import me.megamagnum.main.files.commandRandom;
+import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandExecutor;
 
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 
 import org.bukkit.inventory.meta.ItemMeta;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
 
-public final class Main extends JavaPlugin implements CommandExecutor {
+public final class Main extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
@@ -29,14 +38,23 @@ public final class Main extends JavaPlugin implements CommandExecutor {
         saveConfig();
 
       getCommand("withdraw").setExecutor(new commandTakeHeart());
-
-
+        getCommand("afk").setExecutor(new commandAFK());
+        getCommand("random").setExecutor(new commandRandom());
+            getCommand("performance").setExecutor(new commandPerformance());
+        getCommand("meme").setExecutor(new commandtemp());
 
     getServer().getPluginManager().registerEvents(new warp(), this);
+        getServer().getPluginManager().registerEvents(new onMove(), this);
+        getServer().getPluginManager().registerEvents(new eventmessage(), this);
+        getServer().getPluginManager().registerEvents(new ChatEvent(), this);
+
     getServer().getPluginManager().registerEvents(new DeathEvent(), this);
     getServer().getPluginManager().registerEvents(new heartevents(), this);
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
     recipes();
+
+        onNewDay();
+
 
 
 
@@ -78,13 +96,23 @@ public final class Main extends JavaPlugin implements CommandExecutor {
         eyeendermeta.setLore(eyeenderlore);
         eyeendermeta.setDisplayName( ChatColor.GOLD  + "Warping Eye");
         eyeender.setItemMeta(eyeendermeta);
+        ItemStack tpcompas = new ItemStack(Material.BOOK);
+        ItemMeta tpcompasmeta = tpcompas.getItemMeta();
+        tpcompasmeta.addEnchant(Enchantment.VANISHING_CURSE, 1, true);
+        ArrayList<String> tpcompaslore = new ArrayList();
+        tpcompaslore.add( ChatColor.GOLD  + "This codex will bring you to your friends or foes! ");
+        tpcompasmeta.setLore(tpcompaslore);
+        tpcompasmeta.setDisplayName(ChatColor.MAGIC + "POW" + ChatColor.RESET + "" + ChatColor.DARK_PURPLE + "  Arcane Codex  " + ChatColor.RESET + "" + ChatColor.MAGIC + "POW");
+        tpcompas.setItemMeta(tpcompasmeta);
+
+
+
 
         if(getConfig().getBoolean("Lifesteal")) {
             ShapedRecipe heartcraft = new ShapedRecipe(new NamespacedKey(this, "heartKey"), heart);
-            heartcraft.shape("GEG", "GTG", "GGG");
-            heartcraft.setIngredient('G', Material.BONE);
-            heartcraft.setIngredient('T', Material.TOTEM_OF_UNDYING);
-            heartcraft.setIngredient('E', Material.NETHER_STAR);
+            heartcraft.shape("GGG", "GEG", "GGG");
+            heartcraft.setIngredient('G', Material.GOLD_INGOT);
+            heartcraft.setIngredient('E', Material.WITHER_SKELETON_SKULL);
             Bukkit.addRecipe(heartcraft);
         }
 
@@ -101,10 +129,55 @@ public final class Main extends JavaPlugin implements CommandExecutor {
         estarcraft.setIngredient('G', Material.GLOWSTONE);
         estarcraft.setIngredient('E', Material.NETHER_STAR);
 
+        ShapedRecipe tpcompascraft = new ShapedRecipe(new NamespacedKey(this, "tpcompaskey"), tpcompas);
+        tpcompascraft.shape("LDL", "LBL", "LEL");
+        tpcompascraft.setIngredient('L', Material.LEATHER);
+        tpcompascraft.setIngredient('D', Material.DIAMOND);
+        tpcompascraft.setIngredient('B', Material.BOOK);
+        tpcompascraft.setIngredient('E', Material.ENDER_EYE);
 
 
         Bukkit.addRecipe(eyeendercraft);
         Bukkit.addRecipe(estarcraft);
+        Bukkit.addRecipe(tpcompascraft);
 
     }
+    public static void onNewDay(){
+       World world =  Bukkit.getServer().getWorld("world");
+        new BukkitRunnable(){
+            public void run(){
+
+                if(world.getTime() == 100){
+                    Random random = new Random();
+                    int randomint = random.nextInt(15) + 1;
+                    if(randomint == 7){
+                        for(Player player : Bukkit.getOnlinePlayers()){
+                        double maxhealth;
+                        maxhealth = player.getMaxHealth();
+                        if(maxhealth < 20){
+                            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxhealth + 2);
+                            player.sendMessage(ChatColor.RED + "Nieuwe dag Nieuwe kansen! Je hebt een hartje erbij gekregen!");
+
+                        }else{
+                            player.sendMessage(ChatColor.RED + "Nieuwe dag Nieuwe kansen! Maar jij hebt alle kansen nog dus je hebt geen nieuw hartje gekregen!");
+                        }
+                    }
+
+                    }else{
+                        for(Player player : Bukkit.getOnlinePlayers()) {
+                        player.sendMessage(ChatColor.RED + "Jammer genoeg vandaag geen nieuwe kansen!");
+                    }
+                    }
+
+                }
+
+
+            }
+
+
+        }.runTaskTimerAsynchronously(Main.getPlugin(Main.class), 0, (long) 0.5F);
+
+
+    }
+
 }

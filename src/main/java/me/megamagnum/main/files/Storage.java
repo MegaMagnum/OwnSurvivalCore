@@ -16,7 +16,7 @@ public class Storage {
 
     // Finds || generates info storage file
     public static void setup(){
-        file = new File(Bukkit.getServer().getPluginManager().getPlugin("Lifes").getDataFolder(), "storage.yml");
+        file = new File(Bukkit.getServer().getPluginManager().getPlugin("CorevanTim").getDataFolder(), "storage.yml");
 
         if(!file.exists()) {
             try {

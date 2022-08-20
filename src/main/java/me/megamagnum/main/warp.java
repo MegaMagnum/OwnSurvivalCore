@@ -2,6 +2,7 @@ package me.megamagnum.main;
 
 import me.megamagnum.main.files.Storage;
 import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,11 +14,15 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class warp implements Listener {
+
+    public static ArrayList<UUID> tptyping = new ArrayList<>();
+
     private Main mainplugin = Main.getPlugin(Main.class);
-    Boolean warping;
 
 
 @EventHandler
@@ -41,6 +46,15 @@ public class warp implements Listener {
     estarmeta.setLore(estarlore);
     estarmeta.setDisplayName( ChatColor.GOLD  + "Enlightened Star");
     estar.setItemMeta(estarmeta);
+
+    ItemStack tpcompas = new ItemStack(Material.BOOK);
+    ItemMeta tpcompasmeta = tpcompas.getItemMeta();
+    tpcompasmeta.addEnchant(Enchantment.VANISHING_CURSE, 1, true);
+    ArrayList<String> tpcompaslore = new ArrayList();
+    tpcompaslore.add( ChatColor.GOLD  + "This codex will bring you to your friends or foes! ");
+    tpcompasmeta.setLore(tpcompaslore);
+    tpcompasmeta.setDisplayName(ChatColor.MAGIC + "POW" + ChatColor.RESET + "" + ChatColor.DARK_PURPLE + "  Arcane Codex  " + ChatColor.RESET + "" + ChatColor.MAGIC + "POW");
+    tpcompas.setItemMeta(tpcompasmeta);
 
 
     if(e.getAction() == Action.RIGHT_CLICK_AIR) {
@@ -116,6 +130,20 @@ public class warp implements Listener {
                     }
                 }
             }.runTaskLater(mainplugin, 80);
+
+            }
+
+        }else if (p.getItemInHand().getType() == Material.BOOK) {
+            if(meta.hasLore()){
+                p.getInventory().removeItem(tpcompas);
+                p.sendMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Arcane Codex: " + ChatColor.LIGHT_PURPLE + "Type the name of the person you want to go to in chat or type (cancel) to cancel me!");
+                tptyping.add(p.getUniqueId());
+
+                for(Player online : Bukkit.getOnlinePlayers()) {
+                    online.spawnParticle(Particle.END_ROD, p.getEyeLocation(), 1550);
+
+                }
+
 
             }
 
