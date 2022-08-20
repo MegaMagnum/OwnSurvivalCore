@@ -1,9 +1,0 @@
-name: Lifes
-version: '${project.version}'
-main: me.megamagnum.main.Main
-api-version: 1.19
-authors: [ MegaMagnum ]
-description: Temporary lifesteal type of beat
-commands:
-  withdraw:
-    description: Withdraw a heart!
