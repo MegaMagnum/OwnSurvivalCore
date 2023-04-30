@@ -149,8 +149,8 @@ public final class Main extends JavaPlugin implements Listener {
 
                 if(world.getTime() == 100){
                     Random random = new Random();
-                    int randomint = random.nextInt(15) + 1;
-                    if(randomint == 7){
+                    int randomint = random.nextInt(4) + 1;
+                    if(randomint == 3){
                         for(Player player : Bukkit.getOnlinePlayers()){
                         double maxhealth;
                         maxhealth = player.getMaxHealth();
@@ -165,7 +165,7 @@ public final class Main extends JavaPlugin implements Listener {
 
                     }else{
                         for(Player player : Bukkit.getOnlinePlayers()) {
-                        player.sendMessage(ChatColor.RED + "Jammer genoeg vandaag geen nieuwe kansen!");
+                        player.sendMessage(ChatColor.RED + "Jammer genoeg vandaag geen nieuwe kansen!  was:" + randomint);
                     }
                     }
 
