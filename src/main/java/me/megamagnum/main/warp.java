@@ -66,8 +66,8 @@ public class warp implements Listener {
                     online.playSound(p.getLocation(), Sound.ENTITY_ILLUSIONER_PREPARE_MIRROR, 3, 0.5F);
                     p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 75, 300));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 275, 300));
-                    online.spawnParticle(Particle.SMOKE_LARGE, p.getLocation(), 550);
-                    online.spawnParticle(Particle.DRAGON_BREATH, p.getEyeLocation(), 550);
+                    online.spawnParticle(Particle.SMOKE_LARGE, p.getLocation(), 550, 0.5, 0.5, 0.5, 0.1);
+                    online.spawnParticle(Particle.SOUL, p.getEyeLocation(), 550, 0.5, 0.5, 0.5, 0.1);
 
                     p.getInventory().removeItem(estar);
                     new BukkitRunnable() {
@@ -95,7 +95,7 @@ public class warp implements Listener {
 
 
                 for(Player online : Bukkit.getOnlinePlayers()) {
-                    online.spawnParticle(Particle.SMOKE_LARGE, p.getLocation(), 350);
+                    online.spawnParticle(Particle.SMOKE_LARGE, p.getLocation(), 350, 0.5, 0.5, 0.5, 0.1);
 
                     online.playSound(home, Sound.ENTITY_WARDEN_SONIC_CHARGE, 5, 0.4F);
                     online.playSound(p.getLocation(), Sound.ENTITY_WARDEN_SONIC_CHARGE, 5, 0.4F);
@@ -107,8 +107,8 @@ public class warp implements Listener {
                 }
                 Location home1 = home.add(0,1,0);
 
-                p.spawnParticle(Particle.SMOKE_LARGE, home, 550);
-                new BukkitRunnable(){@Override public void run(){  p.spawnParticle(Particle.SCRAPE, home1, 1550);       }}.runTaskLater(mainplugin,40);
+                p.spawnParticle(Particle.SMOKE_LARGE, home, 550, 0.5, 0.5, 0.5, 0.1);
+                new BukkitRunnable(){@Override public void run(){  p.spawnParticle(Particle.SCRAPE, home1, 1550, 0.5, 0.5, 0.5, 0.1);       }}.runTaskLater(mainplugin,40);
                 e.setCancelled(true);
                 
 
@@ -118,12 +118,12 @@ public class warp implements Listener {
 
                     for(Player online : Bukkit.getOnlinePlayers()) {
 
-                        online.spawnParticle(Particle.DRAGON_BREATH, home, 1550);
-                        online.spawnParticle(Particle.END_ROD, home, 1550);
-                        online.spawnParticle(Particle.EXPLOSION_HUGE, home, 10);
+                        online.spawnParticle(Particle.SOUL, home, 1550, 0.5, 0.5, 0.5, 0.1);
+                        online.spawnParticle(Particle.END_ROD, home, 1550, 0.5, 0.5, 0.5, 0.1);
+                        online.spawnParticle(Particle.EXPLOSION_HUGE, home, 10, 0.5, 0.5, 0.5, 0.1);
 
 
-                        online.spawnParticle(Particle.DRAGON_BREATH, p.getLocation(), 1550);
+                        online.spawnParticle(Particle.SOUL, p.getLocation(), 1550, 0.5, 0.5, 0.5, 0.1);
                                p.teleport(home);
 
                         p.removePotionEffect(PotionEffectType.DARKNESS);
@@ -140,7 +140,7 @@ public class warp implements Listener {
                 tptyping.add(p.getUniqueId());
 
                 for(Player online : Bukkit.getOnlinePlayers()) {
-                    online.spawnParticle(Particle.END_ROD, p.getEyeLocation(), 1550);
+                    online.spawnParticle(Particle.END_ROD, p.getEyeLocation(), 1550, 0.5, 0.5, 0.5, 0.1);
 
                 }
 

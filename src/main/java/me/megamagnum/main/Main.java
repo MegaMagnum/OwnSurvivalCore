@@ -4,6 +4,10 @@ import me.megamagnum.main.files.Storage;
 import me.megamagnum.main.files.commandAFK;
 import me.megamagnum.main.files.commandPerformance;
 import me.megamagnum.main.files.commandRandom;
+import me.megamagnum.main.files.commandKleur;
+import me.megamagnum.main.files.commandGiveHeart;
+import me.megamagnum.main.files.commandRemoveHeart;
+import me.megamagnum.main.files.commandTPS;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
@@ -32,8 +36,11 @@ public final class Main extends JavaPlugin implements Listener {
 		getCommand("withdraw").setExecutor(new commandTakeHeart());
 		getCommand("afk").setExecutor(new commandAFK());
 		getCommand("random").setExecutor(new commandRandom());
-		getCommand("performance").setExecutor(new commandPerformance());
+		getCommand("performance").setExecutor(new commandTPS());
 		getCommand("meme").setExecutor(new commandtemp());
+		getCommand("kleur").setExecutor(new commandKleur());
+		getCommand("giveheart").setExecutor(new commandGiveHeart());
+		getCommand("removeheart").setExecutor(new commandRemoveHeart());
 		
 		getServer().getPluginManager().registerEvents(new warp(), this);
 		getServer().getPluginManager().registerEvents(new onMove(), this);
@@ -124,10 +131,6 @@ public final class Main extends JavaPlugin implements Listener {
 				if (world.getTime() == 100) {
 					int randomint = ThreadLocalRandom.current().nextInt(1, 5);
 
-					for (Player player : Bukkit.getOnlinePlayers()) {
-						player.sendMessage(ChatColor.RED + "Random nummer " + randomint);
-					}
-
 					if(randomint == 3){
 						for(Player player : Bukkit.getOnlinePlayers()){
 							double maxhealth;
@@ -135,14 +138,13 @@ public final class Main extends JavaPlugin implements Listener {
 
 							if (maxhealth < 20) {
 								player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxhealth + 2);
-								player.sendMessage(ChatColor.RED + "Nieuwe dag Nieuwe kansen! Je hebt een hartje erbij gekregen!");		
+								player.sendMessage(ChatColor.GREEN + "✦ Nieuwe dag, Nieuwe kansen! Je hebt een hartje erbij gekregen!");
+								player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0F, 1.0F);
+								player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.8F, 1.2F);
 							} else {
-								player.sendMessage(ChatColor.RED + "Nieuwe dag Nieuwe kansen! Maar jij hebt alle kansen nog dus je hebt geen nieuw hartje gekregen!");
+								player.sendMessage(ChatColor.YELLOW + "✦ Nieuwe dag, Nieuwe kansen! Maar jij hebt alle kansen nog dus je hebt geen nieuw hartje gekregen!");
+								player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 1.0F);
 							}
-						}
-					} else {
-						for (Player player : Bukkit.getOnlinePlayers()) {
-							player.sendMessage(ChatColor.RED + "Jammer genoeg vandaag geen nieuwe kansen!");
 						}
 					}	
 				}	

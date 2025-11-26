@@ -1,8 +1,11 @@
 package me.megamagnum.main;
 
 
+import me.megamagnum.main.files.ColorHelper;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,26 +14,25 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 
 public class JoinEvent implements Listener {
+    
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
 
         Main mainplugin = Main.getPlugin(Main.class);
 
-
         Player p = e.getPlayer();
 
-        if(p.isOp()) {
-            p.setDisplayName(ChatColor.DARK_RED + ""  + "◆ " + ChatColor.RESET + p.getName());
-            p.setPlayerListName(ChatColor.DARK_RED + ""  + "◆ " + ChatColor.RESET + p.getName());
-
+        String displayName = ColorHelper.getDisplayName(p);
+        p.setDisplayName(displayName);
+        p.setPlayerListName(displayName);
+        
+        // Join message met groen icoontje
+        e.setJoinMessage(ChatColor.GREEN + "▲ " + ChatColor.RESET + p.getDisplayName() + ChatColor.GREEN + " heeft de server betreden");
+        
+        // Sound effect voor iedereen
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            online.playSound(online.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 0.5F, 2.0F);
         }
-        else{
-            p.setDisplayName(ChatColor.GREEN + ""  + "◆ " + ChatColor.RESET + p.getName());
-            p.setPlayerListName(ChatColor.GREEN + ""  + "◆ " + ChatColor.RESET + p.getName());
-
-        }
-        String joinmessage = ChatColor.YELLOW + " is weer minecraft gaan spelen in plaats van reports doen!";
-        e.setJoinMessage(p.getDisplayName() + joinmessage);
 
 
 
@@ -58,10 +60,16 @@ public class JoinEvent implements Listener {
 
 
     }
+    
     @EventHandler
     public void onLeave(PlayerQuitEvent event){
-        String leavemessage = ChatColor.YELLOW + " gaat weer reports doen!";
-        event.setQuitMessage(event.getPlayer().getDisplayName() + leavemessage);
+        // Leave message met rood icoontje
+        event.setQuitMessage(ChatColor.RED + "▼ " + ChatColor.RESET + event.getPlayer().getDisplayName() + ChatColor.RED + " heeft de server verlaten");
+        
+        // Sound effect voor iedereen
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            online.playSound(online.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5F, 0.5F);
+        }
     }
 
 

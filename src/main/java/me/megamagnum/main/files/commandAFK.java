@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import me.megamagnum.main.files.ColorHelper;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -17,16 +18,18 @@ public class commandAFK implements CommandExecutor  {
         if(sender instanceof Player){
             Player  p = (Player) sender;
             if(afklist.contains(p.getUniqueId())){
-                p.setDisplayName(ChatColor.GREEN + ""  + "◆ " + ChatColor.RESET + p.getName());
-                p.setPlayerListName(ChatColor.GREEN + ""  + "◆ " + ChatColor.RESET + p.getName());
+                String displayName = ColorHelper.getDisplayName(p);
+                p.setDisplayName(displayName);
+                p.setPlayerListName(displayName);
                 p.setSleepingIgnored(false);
 
                 afklist.remove(p.getUniqueId());
                 Bukkit.broadcastMessage(p.getDisplayName() + ChatColor.GRAY + "  is vanaf nu niet meer AFK!");
 
             }else{
-                p.setDisplayName(ChatColor.GREEN + ""  + "◆ " + ChatColor.GRAY + p.getName());
-                p.setPlayerListName(ChatColor.GREEN + ""  + "◆ " + ChatColor.GRAY + p.getName());
+                ChatColor starColor = ColorHelper.getStarColor(p);
+                p.setDisplayName(starColor + "★ " + ChatColor.GRAY + p.getName());
+                p.setPlayerListName(starColor + "★ " + ChatColor.GRAY + p.getName());
                 p.setSleepingIgnored(true);
 
                 afklist.add(p.getUniqueId());

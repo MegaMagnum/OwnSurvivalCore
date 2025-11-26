@@ -10,9 +10,20 @@ commands:
   random:
     description: Geeft een random nummer
     usage: /<command> (maximale nummer)
-  performance:
-    description: Dedotated Wam?
   afk:
     description: retard als je dit niet snapt
   meme:
     description: meme
+  kleur:
+    description: Kies de kleur van je sterretje
+    usage: /<command> <kleur>
+  giveheart:
+    description: Geef hartjes aan een speler (alleen console)
+    usage: /<command> <speler> <aantal>
+  removeheart:
+    description: Verwijder hartjes van een speler (alleen console)
+    usage: /<command> <speler> <aantal>
+  performance:
+    description: Bekijk server performance en TPS
+    usage: /<command>
+    aliases: [servertps, tps, ping, lag]

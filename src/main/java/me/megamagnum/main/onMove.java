@@ -1,7 +1,10 @@
 package me.megamagnum.main;
 
+import me.megamagnum.main.files.commandAFK;
+import me.megamagnum.main.files.ColorHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -13,11 +16,13 @@ public class onMove implements Listener {
     public static void onMove(PlayerMoveEvent e){
 
         if(afklist.contains(e.getPlayer().getUniqueId())){
-            e.getPlayer().setDisplayName(ChatColor.GREEN + ""  + "◆ " + ChatColor.RESET + e.getPlayer().getName());
-            e.getPlayer().setPlayerListName(ChatColor.GREEN + ""  + "◆ " + ChatColor.RESET + e.getPlayer().getName());
-            afklist.remove(e.getPlayer().getUniqueId());
-            Bukkit.broadcastMessage(e.getPlayer().getDisplayName() + ChatColor.GRAY + "  is vanaf nu niet meer AFK!");
-            e.getPlayer().setSleepingIgnored(false);
+            Player p = e.getPlayer();
+            String displayName = ColorHelper.getDisplayName(p);
+            p.setDisplayName(displayName);
+            p.setPlayerListName(displayName);
+            afklist.remove(p.getUniqueId());
+            Bukkit.broadcastMessage(p.getDisplayName() + ChatColor.GRAY + "  is vanaf nu niet meer AFK!");
+            p.setSleepingIgnored(false);
         }
     }
 
