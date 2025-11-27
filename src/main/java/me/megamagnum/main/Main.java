@@ -8,6 +8,9 @@ import me.megamagnum.main.files.commandKleur;
 import me.megamagnum.main.files.commandGiveHeart;
 import me.megamagnum.main.files.commandRemoveHeart;
 import me.megamagnum.main.files.commandTPS;
+import me.megamagnum.main.files.WebDashboard;
+import me.megamagnum.main.files.PlayerDataManager;
+import me.megamagnum.main.files.ServerStatsManager;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
@@ -22,6 +25,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class Main extends JavaPlugin implements Listener {
+	
+	private WebDashboard webDashboard;
 	
 	@Override
 	public void onEnable() {
@@ -50,14 +55,26 @@ public final class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new DeathEvent(), this);
 		getServer().getPluginManager().registerEvents(new heartevents(), this);
 		getServer().getPluginManager().registerEvents(new JoinEvent(), this);
+		getServer().getPluginManager().registerEvents(new WebDashboardEvents(), this);
 		recipes();
+		
+		// Start web dashboard
+		webDashboard = new WebDashboard(this);
+		webDashboard.startWebServer();
+		
+		// Initialize managers
+		PlayerDataManager.getInstance();
+		ServerStatsManager.getInstance();
 		
 		onNewDay();	
 	}
 	
 	@Override
 	public void onDisable() {
-
+		// Stop web dashboard
+		if (webDashboard != null) {
+			webDashboard.stopWebServer();
+		}
 	}
 	
 	public void recipes(){

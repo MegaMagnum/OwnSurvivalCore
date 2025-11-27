@@ -1,2 +1,12 @@
 storage: true
 Lifesteal: true
+
+# Web Dashboard Configuration
+webdashboard:
+  enabled: true
+  port: 8080
+  # Security instellingen (optioneel voor later)
+  security:
+    enabled: false
+    username: "admin"
+    password: "admin123"
