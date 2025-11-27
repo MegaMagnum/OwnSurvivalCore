@@ -12,8 +12,16 @@ public class ServerStatsManager {
     private final DecimalFormat df = new DecimalFormat("#.##");
     private long startTime;
     
+    // Cache voor async-safe data
+    private volatile int cachedTotalEntities = 0;
+    private volatile int cachedTotalChunks = 0;
+    private volatile int cachedOnlinePlayers = 0;
+    private volatile String cachedMainWorld = "world";
+    private volatile int cachedWorldCount = 1;
+    
     private ServerStatsManager() {
         this.startTime = System.currentTimeMillis();
+        updateCachedData(); // Initial update
     }
     
     public static ServerStatsManager getInstance() {
@@ -23,14 +31,37 @@ public class ServerStatsManager {
         return instance;
     }
     
+    // Deze methode moet aangeroepen worden op de main thread
+    public void updateCachedData() {
+        try {
+            cachedOnlinePlayers = Bukkit.getOnlinePlayers().size();
+            cachedWorldCount = Bukkit.getWorlds().size();
+            
+            if (!Bukkit.getWorlds().isEmpty()) {
+                cachedMainWorld = Bukkit.getWorlds().get(0).getName();
+            }
+            
+            int totalEntities = 0;
+            int totalChunks = 0;
+            for (World world : Bukkit.getWorlds()) {
+                totalEntities += world.getEntities().size();
+                totalChunks += world.getLoadedChunks().length;
+            }
+            cachedTotalEntities = totalEntities;
+            cachedTotalChunks = totalChunks;
+        } catch (Exception e) {
+            // Ignore errors during update
+        }
+    }
+    
     public JsonObject getServerStats() {
         JsonObject stats = new JsonObject();
         
-        // Basic server info
-        stats.addProperty("serverName", Bukkit.getServerName());
+        // Basic server info (these are thread-safe)
+        stats.addProperty("serverName", Bukkit.getServer().getName());
         stats.addProperty("version", Bukkit.getVersion());
         stats.addProperty("bukkitVersion", Bukkit.getBukkitVersion());
-        stats.addProperty("onlinePlayers", Bukkit.getOnlinePlayers().size());
+        stats.addProperty("onlinePlayers", cachedOnlinePlayers);
         stats.addProperty("maxPlayers", Bukkit.getMaxPlayers());
         
         // Performance stats
@@ -43,11 +74,11 @@ public class ServerStatsManager {
         // Uptime
         stats.addProperty("uptime", getUptime());
         
-        // World info
-        stats.addProperty("worldCount", Bukkit.getWorlds().size());
-        stats.addProperty("mainWorld", Bukkit.getWorlds().get(0).getName());
-        stats.addProperty("totalEntities", getTotalEntities());
-        stats.addProperty("totalChunksLoaded", getTotalChunksLoaded());
+        // World info (cached)
+        stats.addProperty("worldCount", cachedWorldCount);
+        stats.addProperty("mainWorld", cachedMainWorld);
+        stats.addProperty("totalEntities", cachedTotalEntities);
+        stats.addProperty("totalChunksLoaded", cachedTotalChunks);
         
         return stats;
     }
@@ -97,22 +128,6 @@ public class ServerStatsManager {
         
         return String.format("%d dagen, %d uur, %d minuten", 
                            days, hours % 24, minutes % 60);
-    }
-    
-    private int getTotalEntities() {
-        int totalEntities = 0;
-        for (World world : Bukkit.getWorlds()) {
-            totalEntities += world.getEntities().size();
-        }
-        return totalEntities;
-    }
-    
-    private int getTotalChunksLoaded() {
-        int totalChunks = 0;
-        for (World world : Bukkit.getWorlds()) {
-            totalChunks += world.getLoadedChunks().length;
-        }
-        return totalChunks;
     }
     
     public JsonObject getDetailedPerformance() {

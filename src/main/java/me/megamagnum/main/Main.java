@@ -64,7 +64,12 @@ public final class Main extends JavaPlugin implements Listener {
 		
 		// Initialize managers
 		PlayerDataManager.getInstance();
-		ServerStatsManager.getInstance();
+		ServerStatsManager serverStats = ServerStatsManager.getInstance();
+		
+		// Update server stats cache elke seconde (20 ticks)
+		Bukkit.getScheduler().runTaskTimer(this, () -> {
+			serverStats.updateCachedData();
+		}, 20L, 20L);
 		
 		onNewDay();	
 	}
