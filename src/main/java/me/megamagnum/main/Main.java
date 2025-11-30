@@ -8,6 +8,10 @@ import me.megamagnum.main.files.commandKleur;
 import me.megamagnum.main.files.commandGiveHeart;
 import me.megamagnum.main.files.commandRemoveHeart;
 import me.megamagnum.main.files.commandTPS;
+import me.megamagnum.main.files.commandTriggerEvent;
+import me.megamagnum.main.files.commandReverse;
+import me.megamagnum.main.files.commandMyCoords;
+import me.megamagnum.main.files.AIConspiracyCommand;
 import me.megamagnum.main.files.WebDashboard;
 import me.megamagnum.main.files.PlayerDataManager;
 import me.megamagnum.main.files.ServerStatsManager;
@@ -46,6 +50,10 @@ public final class Main extends JavaPlugin implements Listener {
 		getCommand("kleur").setExecutor(new commandKleur());
 		getCommand("giveheart").setExecutor(new commandGiveHeart());
 		getCommand("removeheart").setExecutor(new commandRemoveHeart());
+		getCommand("ai").setExecutor(new AIConspiracyCommand(this));
+		getCommand("triggerevent").setExecutor(new commandTriggerEvent());
+		getCommand("reverse").setExecutor(new commandReverse(this));
+		getCommand("mycoords").setExecutor(new commandMyCoords());
 		
 		getServer().getPluginManager().registerEvents(new warp(), this);
 		getServer().getPluginManager().registerEvents(new onMove(), this);
@@ -56,20 +64,23 @@ public final class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new heartevents(), this);
 		getServer().getPluginManager().registerEvents(new JoinEvent(), this);
 		getServer().getPluginManager().registerEvents(new WebDashboardEvents(), this);
+		getServer().getPluginManager().registerEvents(new RandomChallengeEvent(this), this);
 		recipes();
 		
-		// Start web dashboard
-		webDashboard = new WebDashboard(this);
-		webDashboard.startWebServer();
-		
-		// Initialize managers
-		PlayerDataManager.getInstance();
-		ServerStatsManager serverStats = ServerStatsManager.getInstance();
-		
-		// Update server stats cache elke seconde (20 ticks)
-		Bukkit.getScheduler().runTaskTimer(this, () -> {
-			serverStats.updateCachedData();
-		}, 20L, 20L);
+		// Start web dashboard alleen als enabled
+		if(getConfig().getBoolean("webdashboard.enabled", true)) {
+			webDashboard = new WebDashboard(this);
+			webDashboard.startWebServer();
+			
+			// Initialize managers
+			PlayerDataManager.getInstance();
+			ServerStatsManager serverStats = ServerStatsManager.getInstance();
+			
+			// Update server stats cache elke seconde (20 ticks)
+			Bukkit.getScheduler().runTaskTimer(this, () -> {
+				serverStats.updateCachedData();
+			}, 20L, 20L);
+		}
 		
 		onNewDay();	
 	}

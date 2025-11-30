@@ -3,7 +3,7 @@ Lifesteal: true
 
 # Web Dashboard Configuration
 webdashboard:
-  enabled: true
+  enabled: false
   port: 8080
   # Security instellingen (optioneel voor later)
   security:

@@ -27,3 +27,16 @@ commands:
     description: Bekijk server performance en TPS
     usage: /<command>
     aliases: [servertps, tps, ping, lag]
+  ai:
+    description: Vraag de AI complottheorie generator
+    usage: /<command> <vraag>
+  triggerevent:
+    description: Trigger een random challenge event (alleen console)
+    usage: /<command>
+  reverse:
+    description: Reverse speler movement (alleen console)
+    usage: /<command> [speler] [seconden]
+  mycoords:
+    description: Laat je coördinaten zien met Nether/Overworld conversie
+    usage: /<command>
+    aliases: [coords, coordinates, whereami]
